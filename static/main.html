@@ -19,9 +19,9 @@
   <script src="angular-material.min.js"></script>
   <script src="main.js"></script>
   <!-- Your application bootstrap  -->
-  <p> {{ text }} </p>
   <md-content class="md-padding">
     <md-tabs md-selected="selcetedTab" md-border-bottom>
+      <md-tab ng-repeat="heap in heaps" label="{{heap}}"></md-tab>
     </md-tabs>
   </md-content>
 

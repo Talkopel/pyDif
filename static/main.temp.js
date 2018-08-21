@@ -5,17 +5,9 @@
 	function pyDifCtrl($scope) {
 		$scope.bla = "sdfsdf";
 
-		$scope.heaps = [
-			'131072',
-		
-			'31457280',
-		
-			'3604480',
-		
-			'3866624',
-		
-			'65536',
-		]
+		$scope.heaps = [{% for heap in heaps %}
+			'{{heap}}',
+		{% endfor %}]
 
 	}
 })();
