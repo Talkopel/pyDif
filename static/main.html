@@ -19,9 +19,20 @@
   <script src="angular-material.min.js"></script>
   <script src="main.js"></script>
   <!-- Your application bootstrap  -->
-  <md-content class="md-padding">
-    <md-tabs md-selected="selcetedTab" md-border-bottom>
-      <md-tab ng-repeat="heap in heaps" label="{{heap}}"></md-tab>
+  <div layout="row" layout-padding>
+    <md-checkbox ng-model="noZeored" flex>No empty chunks</md-checkbox>
+  </div>
+  
+  <md-content class="md-padding" layout>
+      
+   
+    <md-tabs md-selected="selcetedTab" md-border-bottom md-dynamic-height>
+      <md-tab ng-repeat="heap in heaps" label="{{heap}}">
+        <div ng-if="selcetedTab == heaps.indexOf(heap)">
+          <p ng-repeat="chunk in data_heaps[heap] track by $index"> {{chunk}} </p>
+          <br><br>
+        </div>
+      </md-tab>
     </md-tabs>
   </md-content>
 

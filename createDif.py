@@ -1,6 +1,7 @@
 import struct
 import jinja2
 import os
+import base64
 
 
 def save_template(rendered_template):
@@ -26,7 +27,7 @@ def parse_heap(heapId):
 
 			chunk_size_index = chunk_size_index + 4 + chunk_size
 
-			chunks.append(chunk_size)
+			chunks.append(base64.b64encode(chunk))
 
 	return chunks
 
@@ -39,9 +40,15 @@ if __name__ == "__main__":
 	heaps = [file[:-4] for file in os.listdir(os.getcwd()) if file[-4:] == '.dat']
 
 	template = jinja2.Template(template_text)
-	stream = template.render(heaps=heaps)
 	
-	print parse_heap(heaps[1])
+	
+	parsed_heaps_and_chunks = {}
+
+	for heap in heaps:
+		chunks = parse_heap(heap)
+		parsed_heaps_and_chunks[heap] = chunks
+
+	stream = template.render(heaps=heaps, parsed_heaps_and_chunks=parsed_heaps_and_chunks)
 
 	save_template(stream)
 
