@@ -27,10 +27,8 @@
       
    
     <md-tabs md-selected="selcetedTab" md-border-bottom md-dynamic-height>
-      <md-tab ng-repeat="heap in heaps" label="{{heap}}">
-        <div ng-if="selcetedTab == heaps.indexOf(heap)">
-          <p ng-repeat="chunk in data_heaps[heap] track by $index"> {{chunk}} </p>
-          <br><br>
+      <md-tab ng-repeat="heap in heapIds" label="{{heap}}">
+        <div ng-if="selcetedTab == heaps.indexOf(heappIds)">
         </div>
       </md-tab>
     </md-tabs>

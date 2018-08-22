@@ -6,16 +6,20 @@
 #include "tlhelp32.h"
 #include "stdlib.h"
 
+
+#define ARCH "x86"
+#if defined _M_X64
+#define ARCH "x64"
+#endif 
+
+
 #define null NULL
-
-static char* fileOut = null;
-
 
 int openGivenProcess(int pid, HANDLE *processHandle)
 {
 
 	*processHandle = OpenProcess(
-		PROCESS_VM_READ | PROCESS_QUERY_INFORMATION | PROCESS_ALL_ACCESS,
+		PROCESS_VM_READ,
 		false,
 		pid);
 
@@ -36,16 +40,13 @@ void * copyBlock(LPHEAPENTRY32 entry, HANDLE processHandle, size_t pid)
 	SIZE_T query = 0;
 	int readResult = 0;
 	char *copyBuffer = null;
-	size_t *blockSize = null;
 	void *toCopy = null;
 	
-	copyBuffer = (char *)malloc(( 4 + entry->dwBlockSize ));
+	copyBuffer = (char *)malloc(( sizeof(HEAPENTRY32) + entry->dwBlockSize ));
 
-	blockSize = (size_t *)copyBuffer;
+	memcpy(copyBuffer, entry, sizeof(HEAPENTRY32));
 
-	*blockSize = entry->dwBlockSize;
-
-	toCopy = copyBuffer + sizeof(size_t);
+	toCopy = copyBuffer + sizeof(HEAPENTRY32);
 
 	readResult = ReadProcessMemory(
 		processHandle,
@@ -75,8 +76,6 @@ void * copyBlock(LPHEAPENTRY32 entry, HANDLE processHandle, size_t pid)
 	return copyBuffer;
 	
 }
-
-
 
 
 int main(size_t argc, char** argv)
@@ -142,7 +141,7 @@ int main(size_t argc, char** argv)
 
 			heapObj.dwSize = sizeof(HEAPENTRY32);
 
-			snprintf(outFile, 32, "%u.dat", heapListObj.th32HeapID);
+			snprintf(outFile, 32, "%s_PID_%u_HEAPID_%u.dat",ARCH, pid ,heapListObj.th32HeapID);
 			
 			
 			if (fopen_s(&dump, outFile, "wb") != 0)
@@ -162,7 +161,7 @@ int main(size_t argc, char** argv)
 						continue;
 					}
 					
-					fwrite(copiedMem, 1, heapObj.dwBlockSize + 4, dump);
+					fwrite(copiedMem, 1, heapObj.dwBlockSize + sizeof(HEAPENTRY32), dump);
 
 					free(copiedMem);
 
