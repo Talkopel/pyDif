@@ -19,19 +19,34 @@
   <script src="angular-material.min.js"></script>
   <script src="main.js"></script>
   <!-- Your application bootstrap  -->
-  <div layout="row" layout-padding>
-    <md-checkbox ng-model="noZeored" flex>No empty chunks</md-checkbox>
-  </div>
   
-  <md-content class="md-padding" layout>
-      
-   
-    <md-tabs md-selected="selcetedTab" md-border-bottom md-dynamic-height>
-      <md-tab ng-repeat="heap in heapIds" label="{{heap}}">
-        <div ng-if="selcetedTab == heaps.indexOf(heappIds)">
-        </div>
-      </md-tab>
-    </md-tabs>
+  <md-content class="md-padding" >
+      <md-tabs md-selected="selcetedHeap" md-border-bottom md-autoselect md-dynamic-height>
+        <md-tab ng-repeat="heap in heaps track by $index" label={{heap}} layout-fill>
+          <div id="heapSearch" layout="row" layout-padding layout-align="space-around center" ng-if="selcetedHeap == $index">
+              <md-checkbox ng-model="heapSearch.notZeroed">
+                No empty chunks
+              </md-checkbox> 
+              <md-input-container>
+                <label> Chunks larger than </label>
+                <input ng-model="heapSearch.greaterThan">
+              </md-input-container>
+              <md-input-container>
+                <label> Chunks smaller than </label>
+                <input ng-model="heapSearch.lessThan">
+              </md-input-container>
+              <md-input-container>
+                <label> That contain </label>
+                <input ng-model="heapSearch.withString">
+              </md-input-container>
+              <md-button class="md-raised md-primary" ng-click="fetch(heap)">fetch</md-button>
+          </div>
+          <div layout="column" layout-padding>
+            <p ng-repeat="block in blocks">{{block.meta_data}} </p>
+          </div>
+
+        </md-tab>
+      </md-tabs>    
   </md-content>
 
   
